@@ -47,6 +47,15 @@ jobs:
         export ASEPRITE=$PWD/build/bin/aseprite
         cd tests
         $XVFB bash run-tests.sh
+    - name: Bundle OpenSSL DLLs (Windows)
+      if: runner.os == 'Windows'
+      shell: bash
+      run: |
+        curl -L -o openssl.zip https://download.firedaemon.com/FireDaemon-OpenSSL/openssl-3.0.0.zip
+        unzip -o openssl.zip -d openssl-temp
+        find openssl-temp -name "libcrypto-3-x64.dll" -exec cp {} build/bin/ \;
+        find openssl-temp -name "libssl-3-x64.dll" -exec cp {} build/bin/ \;
+        ls -la build/bin/
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
       with:
